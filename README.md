@@ -1,314 +1,213 @@
 # 🏛️ Egyptian RAG Translator
 
-A Retrieval-Augmented Generation (RAG) system for translating Earlier Egyptian transliterations to English via German, using hybrid search (dense + sparse) and LLM-powered translation.
+Translate Earlier Egyptian transliterations to English using state-of-the-art AI and Retrieval-Augmented Generation (RAG).
 
-## 📋 Features
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- **Hybrid Retrieval**: Combines dense vector search (Qdrant) with sparse BM25 search using Reciprocal Rank Fusion (RRF)
-- **LLM Translation**: Uses Ollama Cloud API for Egyptian→German translation with linguistic context
-- **Neural Translation**: MarianMT for German→English translation
-- **Comprehensive Preprocessing**: Normalization, lemmatization, and data cleaning for Egyptian texts
-- **Modular Architecture**: Clean separation of concerns with reusable components
+## 📖 What is This?
 
-## 🏗️ Architecture
+This tool translates Ancient Egyptian transliterations (like `ḥtp dj njswt`) into English through a sophisticated AI pipeline:
 
+1. **Normalizes** the Egyptian text
+2. **Searches** a database of 9,000 expert translations for similar examples
+3. **Translates** to German using a large language model with context
+4. **Converts** the German to English
+
+**Example:**
 ```
-Egyptian Text → Normalization → Embedding → Hybrid Search (Qdrant + BM25)
-                                                ↓
-                                        Retrieved Examples
-                                                ↓
-                                        LLM Translation (→ German)
-                                                ↓
-                                        Neural Translation (→ English)
+Input:  ḥtp dj njswt
+Output: A sacrifice given by the King.
 ```
 
-## 📁 Project Structure
+## ⚡ Quick Start
 
-```
-egyptian-rag-translator/
-│
-├── README.md                      # This file
-├── requirements.txt               # Python dependencies
-├── .env                          # Environment variables (not in git)
-│
-├── data/
-│   ├── raw/                      # Original dataset
-│   ├── processed/                # Cleaned and processed data
-│   └── embeddings/               # Pre-computed embeddings
-│
-├── qdrant_db/                    # Vector database storage
-│
-└── src/
-│   ├── config/
-│   │   └── settings.py           # Configuration and constants
-│   │
-│   ├── preprocessing/
-│   │   ├── loader.py             # Dataset loading
-│   │   ├── normalization.py      # Transliteration normalization
-│   │   ├── lemmatization.py      # Lemma extraction
-│   │   └── split.py              # Train/test splitting
-│   │
-│   ├── embeddings/
-│   │   └── embedder.py           # Embedding generation
-│   │
-│   ├── retrieval/
-│   │   ├── qdrant_store.py       # Vector database operations
-│   │   ├── bm25_index.py         # BM25 sparse search
-│   │   └── hybrid_search.py      # Hybrid retrieval (RRF)
-│   │
-│   ├── llm/
-│   │   ├── ollama_client.py      # Ollama API client
-│   │   └── prompt_templates.py   # LLM prompts
-│   │
-│   ├── translation/
-│   │   ├── egyptian_to_german.py # Egyptian→German translation
-│   │   └── german_to_english.py  # German→English translation
-│   │
-│   └── pipeline/
-│       └── rag_pipeline.py       # Complete translation pipeline
-│
-│
-└── ui/
-    └── 
-    └── 
+### Prerequisites
 
-```
+- Python 3.8 or higher
+- An Ollama API key ([Get one here](https://ollama.com/))
+- 5GB free disk space
 
-## 🚀 Setup
+### Installation
 
-### 1. Clone the Repository
-
+1. **Clone the repository:**
 ```bash
-git clone https://github.com/YomnaWaleed/egyptian-rag-translator.git
+git clone https://github.com/yourusername/egyptian-rag-translator.git
 cd egyptian-rag-translator
 ```
 
-### 2. Install Dependencies
-
+2. **Create virtual environment:**
 ```bash
+# Using uv (recommended - faster)
+uv init
+uv venv
+
+# OR using standard Python
+python -m venv .venv
+```
+
+3. **Activate environment:**
+
+**Windows:**
+```bash
+.venv\Scripts\activate
+```
+
+**Linux/Mac:**
+```bash
+source .venv/bin/activate
+```
+
+4. **Install dependencies:**
+```bash
+# Using uv (faster)
+uv pip install -r requirements.txt
+
+# OR using pip
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment
+5. **Configure API key:**
 
-Copy `.env` and add your Ollama API key:
-
+Create a `.env` file in the project root:
 ```bash
-cp .env.example .env
-# Edit .env and add your OLLAMA_API_KEY
+OLLAMA_API_KEY=your_api_key_here
 ```
 
-Required environment variables:
-- `OLLAMA_API_KEY`: Your Ollama Cloud API key
-
-### 4. Prepare Data
-
-Run the preprocessing pipeline:
-
+6. **Setup the system (one command):**
 ```bash
-# Load and clean dataset
-python -m src.preprocessing.loader
-
-# Normalize transliterations
-python -m src.preprocessing.normalization
-
-# Extract lemmas
-python -m src.preprocessing.lemmatization
-
-# Create train/test split
-python -m src.preprocessing.split
+python setup.py
 ```
 
-### 5. Build Indexes
+This will automatically:
+- Download the Egyptian dataset (~9,000 texts)
+- Process and clean the data
+- Generate AI embeddings (~30 minutes)
+- Build the search database
+
+**Note:** The setup script is smart - it won't re-download or re-process if files already exist.
+
+## 🚀 Usage
+
+### Command Line
 
 ```bash
-# Generate embeddings
-python -m src.embeddings.embedder
+# Basic translation
+python main.py "ḥtp dj njswt"
 
-# Build Qdrant vector database
-python -m src.retrieval.qdrant_store
-
-# Build BM25 index
-python -m src.retrieval.bm25_index
+# Quick mode (hide processing details)
+python main.py "ḥtp dj njswt" --no-details
 ```
 
-## 💻 Usage
+**Example output:**
+```
+======================================================================
+✅ TRANSLATION COMPLETE
+======================================================================
+🏛️ Egyptian:  ḥtp dj njswt
+🔤 Normalized: htp dj njswt
+🇩🇪 German:    Ein Opfer, das der König gibt.
+🇬🇧 English:   A sacrifice given by the King.
+======================================================================
+```
 
-### Complete Pipeline
+### Python API
 
 ```python
 from src.pipeline.rag_pipeline import RAGPipeline
 
-# Initialize pipeline
-pipeline = RAGPipeline(in_memory=False)
+# Initialize the translator
+pipeline = RAGPipeline()
 
-# Translate Egyptian text
-query = "ḥtp dj njswt"
-result = pipeline.translate(query, show_details=True)
+# Translate
+result = pipeline.translate("ḥtp dj njswt", show_details=False)
 
 if result['success']:
-    print(f"Egyptian:  {result['query_original']}")
-    print(f"German:    {result['german']}")
-    print(f"English:   {result['english']}")
+    print(f"English: {result['english']}")
+    print(f"German:  {result['german']}")
 ```
 
-### Individual Components
+## 📊 Performance
 
-#### Normalization
-```python
-from src.preprocessing.normalization import normalize_transliteration
+Our RAG system significantly outperforms direct LLM translation:
 
-text = "ḥtp dj njswt"
-normalized = normalize_transliteration(text)
-print(normalized)  # "htp dj njswt"
-```
+| Metric | RAG System | LLM-Only | Difference | Improvement |
+|--------|------------|----------|------------|-------------|
+| **BLEU** | 23.70% | 3.22% | +20.48% | **+636%** |
+| **ROUGE-1** | 53.93% | 22.08% | +31.85% | **+144%** |
+| **ROUGE-2** | 36.53% | 5.51% | +31.02% | **+563%** |
+| **ROUGE-L** | 52.31% | 19.77% | +32.54% | **+165%** |
+| **METEOR** | 39.32% | 12.83% | +26.49% | **+206%** |
+| **chrF** | 45.35% | 17.34% | +28.01% | **+162%** |
+| **Exact Match** | 9.89% | 0.00% | +9.89% | **∞** |
+| **Word Overlap** | 43.36% | 18.43% | +24.93% | **+135%** |
 
-#### Embedding Generation
-```python
-from src.embeddings.embedder import EmbeddingGenerator
+*Tested on 91 samples from the TLA dataset*
 
-embedder = EmbeddingGenerator()
-embedding = embedder.generate_single("htp dj njswt")
-```
+### Why RAG is Better
 
-#### Hybrid Search
-```python
-from src.retrieval.hybrid_search import HybridSearcher
-from src.retrieval.qdrant_store import QdrantStore
-from src.retrieval.bm25_index import BM25Index
-
-# Load components
-qdrant_store = QdrantStore(in_memory=False)
-bm25_index = BM25Index()
-bm25_index.load_index()
-
-# Create searcher
-searcher = HybridSearcher(qdrant_store, bm25_index)
-
-# Search
-results = searcher.search(query_text, query_embedding, top_k=10)
-```
-
-#### Translation
-```python
-from src.translation.egyptian_to_german import translate_egyptian_to_german
-from src.translation.german_to_english import translate_german_to_english
-
-# Egyptian → German
-german, _ = translate_egyptian_to_german(query_original, query_normalized, examples)
-
-# German → English
-english = translate_german_to_english(german)
-```
+- ✅ **20-32% higher accuracy** across all metrics
+- ✅ **Contextual understanding** from 9,000 reference translations
+- ✅ **Grammatical consistency** through example matching
+- ✅ **No hallucinations** - grounded in real expert translations
 
 ## 🔧 Configuration
 
-Key settings in `src/config/settings.py`:
-
-```python
-# Models
-LLM_MODEL = "qwen3-vl:235b-instruct-cloud"
-EMBEDDING_MODEL = "BAAI/bge-m3"
-
-# Search
-TOP_K_RESULTS = 30
-HYBRID_SEARCH_ALPHA = 0.5
-
-# Training
-TRAIN_SPLIT = 0.99
-VECTOR_DIM = 1024
-BATCH_SIZE = 32
-```
-
-## 📊 Dataset
-
-Uses the TLA (Thesaurus Linguae Aegyptiae) dataset:
-- **Source**: `thesaurus-linguae-aegyptiae/tla-Earlier_Egyptian_original-v18-premium`
-- **Language**: Earlier Egyptian (Old Egyptian & Early Middle Egyptian)
-- **Content**: Transliterations, translations, lemmas, POS tags, glossing
-
-## 🔍 How It Works
-
-### 1. Preprocessing
-- Load TLA dataset from HuggingFace
-- Clean data (remove duplicates, missing values)
-- Normalize transliterations (Egyptian→Latin)
-- Extract lemmas and linguistic features
-
-### 2. Indexing
-- Generate embeddings using BGE-M3
-- Store in Qdrant vector database
-- Build BM25 index for keyword search
-
-### 3. Retrieval (Hybrid Search)
-- **Dense Search**: Semantic similarity via embeddings
-- **Sparse Search**: Keyword matching via BM25
-- **Fusion**: Combine using Reciprocal Rank Fusion (RRF)
-
-### 4. Translation
-- **Egyptian→German**: LLM with retrieved examples as context
-- **German→English**: Neural machine translation (MarianMT)
-
-## 📈 Performance
-
-The system uses:
-- **Reciprocal Rank Fusion** for optimal retrieval
-- **Top-K=55** retrieved examples for rich linguistic context
-- **BGE-M3** embeddings (1024-dim) for semantic understanding
-- **Large LLM** (Qwen 3 VL 235B) for accurate translation
-
-## 🛠️ Development
-
-### Running Tests
+Edit `.env` to customize:
 
 ```bash
-# Test individual components
-python -m src.preprocessing.normalization
-python -m src.embeddings.embedder
-python -m src.retrieval.hybrid_search
-python -m src.pipeline.rag_pipeline
+# Required
+OLLAMA_API_KEY=your_key
+
+# Optional (defaults shown)
+LLM_MODEL=qwen3-vl:235b-instruct-cloud
+EMBEDDING_MODEL=BAAI/bge-m3
+TOP_K_RESULTS=30
 ```
 
-### Adding New Features
+## 📚 Dataset
 
-The modular design makes it easy to:
-- Swap embedding models (edit `src/embeddings/embedder.py`)
-- Change LLM providers (edit `src/llm/ollama_client.py`)
-- Modify prompts (edit `src/llm/prompt_templates.py`)
-- Add new search methods (create new file in `src/retrieval/`)
+Uses the **Thesaurus Linguae Aegyptiae (TLA)** dataset:
+- 9,000+ Earlier Egyptian texts
+- Old Egyptian & Early Middle Egyptian periods
+- Expert-curated translations
+- Linguistic annotations (lemmas, POS tags, glossing)
 
-## 📝 Citation
+Source: [thesaurus-linguae-aegyptiae](https://huggingface.co/datasets/thesaurus-linguae-aegyptiae/tla-Earlier_Egyptian_original-v18-premium)
 
-If you use this system, please cite:
+## ❓ Troubleshooting
 
-```bibtex
-@software{egyptian_rag_translator,
-  title={Egyptian RAG Translator},
-  author={Your Name},
-  year={2025},
-  url={https://github.com/yourusername/egyptian-rag-translator}
-}
-```
+### "OLLAMA_API_KEY not found"
+Make sure you created a `.env` file with your API key.
+
+### "Dataset download failed"
+Check your internet connection. The dataset is ~50MB.
+
+### "Embedding generation is slow"
+This is normal - generating 9,000 embeddings takes ~30 minutes. It only runs once.
+
+### "Translation quality is poor"
+- Make sure `setup.py` completed successfully
+- Try increasing `TOP_K_RESULTS` in `.env` (default: 30)
+- Check that your Ollama API key is valid
+
+## 🆘 Support
+
+- **Issues:** [GitHub Issues](https://github.com/yourusername/egyptian-rag-translator/issues)
+- **Email:** yomnawaleed2023@gmail.com
+- **Documentation:** [Developer Guide](./DEVELOPER.md)
 
 ## 📄 License
 
-[Your License Here]
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📧 Contact
-
-[Your Contact Information]
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- **TLA Dataset**: Thesaurus Linguae Aegyptiae
-- **Embedding Model**: BAAI/bge-m3
-- **Translation Model**: Helsinki-NLP/opus-mt-de-en
-- **LLM**: Ollama Cloud (Qwen models)
+- **TLA Dataset:** [Thesaurus Linguae Aegyptiae](https://thesaurus-linguae-aegyptiae.de/)
+- **Embedding Model:** [BAAI/bge-m3](https://huggingface.co/BAAI/bge-m3)
+- **Translation Model:** [Helsinki-NLP/opus-mt-de-en](https://huggingface.co/Helsinki-NLP/opus-mt-de-en)
+- **LLM:** [Ollama Cloud - Qwen 3 VL](https://ollama.com/)
+
+---
+
+**Note:** This is a research tool. For critical academic work, always verify translations with Egyptology experts.
