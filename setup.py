@@ -1,9 +1,12 @@
-# setup.py
+# -*- coding: utf-8 -*-
+
 """
 Setup script to prepare the entire Egyptian RAG Translator system
 Smart version: Detects existing files and skips completed steps
 """
 import sys
+
+sys.stdout.reconfigure(encoding="utf-8")
 import os
 import pandas as pd
 from pathlib import Path

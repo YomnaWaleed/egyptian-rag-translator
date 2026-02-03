@@ -1043,59 +1043,6 @@ print(f"Translation took: {end - start:.2f}s")
 
 ---
 
-## Deployment
-
-### Production Checklist
-
-- [ ] Environment variables secured (not in git)
-- [ ] Dependencies frozen (`pip freeze > requirements.txt`)
-- [ ] Database backed up (`./qdrant_db/`)
-- [ ] Embeddings pre-computed (`./data/embeddings/`)
-- [ ] API rate limits configured
-- [ ] Error logging enabled
-- [ ] Monitoring setup
-
-### Docker Deployment (Optional)
-
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-
-# Pre-load models
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('BAAI/bge-m3')"
-
-CMD ["python", "main.py"]
-```
-
-### API Deployment (Optional)
-
-```python
-# api.py
-from fastapi import FastAPI
-from src.pipeline.rag_pipeline import RAGPipeline
-
-app = FastAPI()
-pipeline = RAGPipeline()
-
-@app.post("/translate")
-def translate(text: str):
-    result = pipeline.translate(text, show_details=False)
-    return {
-        "egyptian": result['query_original'],
-        "german": result['german'],
-        "english": result['english'],
-        "success": result['success']
-    }
-```
-
----
-
 ## Contributing
 
 ### Code Style

@@ -29,3 +29,10 @@ sentence-transformers
 nltk==3.9.2
 rouge-score==0.1.2
 sacrebleu==2.6.0
+
+
+# Streamlit UI
+streamlit>=1.28.0
+
+# Gradio UI
+gradio>=4.0.0

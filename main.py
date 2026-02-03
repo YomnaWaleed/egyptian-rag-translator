@@ -1,9 +1,12 @@
-# main.py
+# -*- coding: utf-8 -*-
 """
 Main script to run the complete Egyptian RAG Translator pipeline
 """
 import argparse
 from src.pipeline.rag_pipeline import RAGPipeline
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8")
 
 
 def main():
