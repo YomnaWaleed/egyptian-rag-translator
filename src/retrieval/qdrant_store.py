@@ -140,10 +140,15 @@ class QdrantStore:
 
 if __name__ == "__main__":
     import pandas as pd
+    import numpy as np
     from src.config import settings
 
     # Load training data with embeddings
     df_train = pd.read_csv(f"{settings.DATA_PROCESSED_PATH}/tla_train.csv")
+
+    # Load embeddings separately
+    embeddings = np.load(f"{settings.DATA_EMBEDDINGS_PATH}/train_embeddings.npy")
+    df_train["embedding"] = list(embeddings)
 
     # Initialize Qdrant
     qdrant_store = QdrantStore(in_memory=False)

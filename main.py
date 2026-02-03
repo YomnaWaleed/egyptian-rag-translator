@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# main.py
 """
 Main script to run the complete Egyptian RAG Translator pipeline
 """

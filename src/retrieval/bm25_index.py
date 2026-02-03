@@ -120,8 +120,9 @@ if __name__ == "__main__":
     import pandas as pd
     from src.config import settings
 
-    # Load training data
+    # Load training data (no embeddings needed for BM25)
     df_train = pd.read_csv(f"{settings.DATA_PROCESSED_PATH}/tla_train.csv")
+    print(f"✅ Loaded {len(df_train)} training records")
 
     # Build BM25 index
     bm25_index = build_bm25_from_dataset(df_train)

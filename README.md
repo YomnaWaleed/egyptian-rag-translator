@@ -211,7 +211,7 @@ LLM_MODEL = "qwen3-vl:235b-instruct-cloud"
 EMBEDDING_MODEL = "BAAI/bge-m3"
 
 # Search
-TOP_K_RESULTS = 55
+TOP_K_RESULTS = 30
 HYBRID_SEARCH_ALPHA = 0.5
 
 # Training
