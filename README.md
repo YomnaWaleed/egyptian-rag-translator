@@ -246,7 +246,6 @@ This is normal - generating 9,000 embeddings takes ~30 minutes. It only runs onc
 
 ## 🆘 Support
 
-- **Issues:** [GitHub Issues](https://github.com/yourusername/egyptian-rag-translator/issues)
 - **Email:** yomnawaleed2023@gmail.com
 - **Documentation:** [Developer Guide](./DEVELOPER.md)
 
