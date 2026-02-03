@@ -199,7 +199,10 @@ egyptian-rag-translator/
 │   ├── collection/
 │   ├── meta.json
 │   └── storage.sqlite
-│
+├── ui/                    # Persistent vector database
+│   ├── app_gradio.py
+│   └── README_UI.md
+│   
 ├── src/
 │   ├── config/
 │   │   └── settings.py           # All configuration constants
@@ -904,6 +907,56 @@ git push origin main
 
 ### Adding New Features
 
+**Example: Add new UI tab**
+
+1. Edit ui/app_gradio.py:
+
+```bash 
+with gr.Tab("📊 Statistics"):
+    # Add new tab content
+    gr.Markdown("## System Statistics")
+    # ...
+```
+
+2. Add handler function:
+
+```bash 
+def get_statistics():
+    # Compute stats
+    return stats_text
+
+
+stats_btn.click(fn=get_statistics, outputs=stats_output)
+```
+
+**Debugging Tips**
+
+1. Check UI in dev mode:
+
+```bash
+python ui/app_gradio.py --debug
+```
+
+2. Test translation pipeline:
+
+```bash
+
+from src.pipeline.rag_pipeline import RAGPipeline
+
+pipeline = RAGPipeline()
+result = pipeline.translate("ḥtp dj njswt", show_details=True)
+```
+
+3. Verify Qdrant:
+
+```bash 
+from src.retrieval.qdrant_store import QdrantStore
+
+qdrant = QdrantStore()
+count = qdrant.verify_database()
+print(f"Total points: {count}")
+```
+
 **Example: Add new embedding model**
 
 1. Edit `src/embeddings/embedder.py`:
@@ -951,6 +1004,7 @@ class EgyptianToGermanTranslator:
 ### Debugging Tips
 
 **1. Check embeddings:**
+
 ```python
 import numpy as np
 

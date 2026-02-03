@@ -127,6 +127,34 @@ if result['success']:
     print(f"German:  {result['german']}")
 ```
 
+### Web User Interface
+
+For a more user-friendly experience, launch the Gradio web UI:
+
+```bash
+python ui/app_gradio.py
+```
+
+Access at: http://localhost:7860
+
+Features:
+
+🎹 Egyptian keyboard - Click to type special characters
+🔄 Real-time translation - Instant results
+🔍 Retrieved examples - See which similar texts were used
+⚙️ Integrated setup - Run setup from the UI
+📖 Example phrases - Try common Egyptian texts
+
+Quick workflow:
+
+Open UI in browser
+Enter text: ḥtp dj njswt (type or use keyboard)
+Click "🔄 Translate"
+View German & English translations
+Expand "Retrieved Examples" to see RAG context
+
+See UI Guide for detailed instructions.
+
 ## 📊 Performance
 
 Our RAG system significantly outperforms direct LLM translation:
