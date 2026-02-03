@@ -1,0 +1,31 @@
+# Core Dependencies
+datasets>=2.18.0
+transformers>=4.38.0
+torch>=2.2.0
+pandas>=2.2.0
+numpy>=1.26.0
+
+# Translation
+sentencepiece>=0.2.0
+
+# Vector Database
+qdrant-client>=1.7.0
+
+# Ollama Cloud API (compatible version)
+httpx>=0.25.2,<0.26.0
+ollama>=0.1.7
+
+# BM25 for Hybrid Search
+rank-bm25>=0.2.2
+
+# Utilities
+tqdm>=4.66.0
+python-dotenv>=1.0.0
+jupyter>=1.0.0
+ipywidgets>=8.1.0
+scikit-learn
+matplotlib
+sentence-transformers
+nltk==3.9.2
+rouge-score==0.1.2
+sacrebleu==2.6.0
